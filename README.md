@@ -1,5 +1,7 @@
-#大众点评模拟登录checkRisk接口_token破解
-思路和解决步骤：
+# 大众点评模拟登录checkRisk接口_token破解
+
+## 思路和解决步骤：
+
 （1）checkRisk接口请求拦截：
 ![输入接口关键词checkRisk回车](https://upload-images.jianshu.io/upload_images/10203810-2b8716e49c97968f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 （2）确定发起该请求会用到哪些js文件和js函数：
