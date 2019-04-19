@@ -1,40 +1,24 @@
 #大众点评模拟登录checkRisk接口_token破解
- 
 思路和解决步骤：
 （1）checkRisk接口请求拦截：
- 
-输入接口关键词checkRisk回车
-
+![输入接口关键词checkRisk回车](https://upload-images.jianshu.io/upload_images/10203810-2b8716e49c97968f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 （2）确定发起该请求会用到哪些js文件和js函数：
- 
-调用的js函数
-
+![调用的js函数](https://upload-images.jianshu.io/upload_images/10203810-19fd99cf3967a837.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 （3）所有的函数都点击进去，看看该函数里都写了啥有什么参数，方法是什么，这些参数都是什么value
- 
-参数value
-
+![参数value](https://upload-images.jianshu.io/upload_images/10203810-be2ae2c0ae892571.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 (4)在js文件中搜索关键字_token找到可疑关键字Rohr_Opt
- 
-关键字Rohr_Opt
-
+![关键字Rohr_Opt](https://upload-images.jianshu.io/upload_images/10203810-419ad2ff4097c948.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 （5）继续全局搜索Rohr_Opt，发现存在这两个文件中
- 
-确定了加密算法的位置
-
+![确定了加密算法的位置](https://upload-images.jianshu.io/upload_images/10203810-36e0868f8f46d64d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 该js文件的路径是https://s0.meituan.net/mx/rohr/rohr.min.js
 （6）提取该文件内的js源码，格式化，好好研究是怎么算的
- 
-整理js找到算法需求参数和函数间的调用关系
-
+![整理js找到算法需求参数和函数间的调用关系](https://upload-images.jianshu.io/upload_images/10203810-7ac6f2b8cde3bd1a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 （7）根据常识知道token是base64的，但是b64解码后还是看不懂，在b64前又经过了一层加密，该加密方式是压缩字符串，
- 
-deflate方法是js对string的压缩方法
-
+![deflate方法是js对string的压缩方法](https://upload-images.jianshu.io/upload_images/10203810-f684a6bf2c33211c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 （8）整理几千行，js代码间复杂的传参和调用关系，这里iP是源头，以此为核心展开
- 
-解决该ip的生成
-
+![解决该ip的生成](https://upload-images.jianshu.io/upload_images/10203810-50d3ceaf01ca9e7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 （9）整理ip生成算法
+```
 var rohrdata = "";
 var Rohr_Opt = new Object;
 Rohr_Opt.Flag = "100049";
@@ -68,19 +52,25 @@ var iP = {
     tT: [],
     aM: iK()
 };
-(10) 解 aM: iK()有些难度，ik()调用,找到了iK函数，if 内判断是否是phantomjs驱动的，不用管，但是 iQ.getWebdriver()是什么jiba玩意
+```
+(10)   解 aM: iK()有些难度，ik()调用,找到了iK函数，if 内判断是否是phantomjs驱动的，不用管，但是 iQ.getWebdriver()是什么jiba玩意
+```
 var iK = function() {
                     if (window._phantom || window.phantom || window.callPhantom) {
                         return _$_543c[135]
                     };
                     return iQ.getWebdriver()
                 }
+```
 （11）搜索getWebdriver定位到,b.exports意思是往b这个对象插入属性的意思，但是jC是什么jb？
+```
             b.exports = {
                 getWebdriver: jC,
                 listenWebdriver: jD
             }
+```
 （12）搜jC，是个函数，函数内调用其他函数进行逻辑判断，看jF比较顺眼，定位jF
+```
            var jC = function() {
                 if (fx(document)) {
                     return _$_543c[166]
@@ -108,26 +98,31 @@ var iK = function() {
                 };
                 return _$_543c[60]
             };
-（13）这个函数就简单了，判断_ _543c[157]是“__webdriverFunc”，返回的是布尔值
+```
+（13）这个函数就简单了，判断_$_543c[157]是否在e对象里，_$_543c[157]是“__webdriverFunc”，返回的是布尔值
+```
             function jF(e) {
                 return _$_543c[157] in e
             }
+```
 （14）自上而下的推到底端了，我要往回推了，jF返回值必须是false,因为是true说明你是chromedriver等等机器人，后面啥的都没戏；那么jC函数一定要 return _$_543c[60]，index60是''
+````
             var jC = function() {
                 return _$_543c[60]
             };
-  
-return _$_543c[60]是空字符串
-
-
+````
+![return _$_543c[60]是空字符串](https://upload-images.jianshu.io/upload_images/10203810-a6608781b09ae9f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 （15）那么jC只能是'' ,iK ()的返回值也只能是''
+```
 var iK = function() {
                     if (window._phantom || window.phantom || window.callPhantom) {
                         return _$_543c[135]
                     };
                     return iQ.getWebdriver()// return ''
                 }
+```
 （16）那么iP就该这么写了，ip初步生成算法全部搞定；
+```
 var rohrdata = "";
 var Rohr_Opt = new Object;
 Rohr_Opt.Flag = "100049";
@@ -161,7 +156,9 @@ var iP = {
     tT: [],
     aM:_$_543c[60] //或者直接写死成 '',
 };
+```
 （17）还没完，在_token和ip建立连接之前，ip还需要被玩弄几次，接下来看怎么被玩的吧，我找到了iP.reload,意思和Python中dict.update()类似，插入key value，来看看怎么插的！
+```
 iP.bindUserTrackEvent = function() {
   // xxxxxxxxx  省略，看函数名就是和用户操作这个时间进行绑定，和核心算法没啥关系
                 };
@@ -183,9 +180,12 @@ iP.reload = function(jv) {
     };
     return jw
 };
+```
 分析一下：
-新增了sign这个Key,用了iI对ip又算了一遍然后返回出来。cts本来就有而且value就是new Date().getTime();这里脱裤子放屁，不用管。iP.sign = iJ(jx); jw = iI(iP);解决这两个就ok。
+>新增了sign这个Key,用了iI对ip又算了一遍然后返回出来。cts本来就有而且value就是new Date().getTime();这里脱裤子放屁，不用管。```    iP.sign = iJ(jx); jw = iI(iP);```解决这两个就ok。
+
 （18）根据语义判断jx是个object,iO是什么，是querystring，那么iP.reload就该这么写
+```
 iP.reload = function(jv) {
     var jw;
     var jx = {};
@@ -204,7 +204,9 @@ iP.reload = function(jv) {
     };
     return jw
 };
+```
 （19）但是jx是来源jv这个参数，jv这个参数怎么来的呢，目前找不到线索，直接看sign的生成算法
+```
 var iJ = function(je) {
     var jd = [];
     var ck = Object.keys(je).sort();
@@ -216,7 +218,9 @@ var iJ = function(je) {
     jd = jd.join(_$_543c[121]);//_$_543c[121]   &
     return iI(jd)
 };
+```
 (20)优化一下........
+```
 var iJ = function(je) {
     var jd = [];
     var ck = Object.keys(je).sort();
@@ -228,8 +232,10 @@ var iJ = function(je) {
     jd = jd.join('&');
     return iI(jd)
 };
-通过这两行推测，je一定是一个字典var ck = Object.keys(je).sort(); jd.push(jf + '=' + je[jf]),这是我睡一觉头脑清醒后想到的......可能比加班效果好得多（回家其实脑子也一直在考虑这个事情，但是能够更加开阔的去思考）。
+```
+通过这两行推测，je一定是一个字典```    var ck = Object.keys(je).sort(); jd.push(jf + '=' + je[jf])```,这是我睡一觉头脑清醒后想到的......可能比加班效果好得多（回家其实脑子也一直在考虑这个事情，但是能够更加开阔的去思考）。
 (21)假设je是{'name':'dragon','sex':'man','area':'dongjing'}
+```
 var iJ = function(je) {
     var jd = [];
 
@@ -242,7 +248,7 @@ var iJ = function(je) {
         }
     });
 
-    //现在jd =  ["area=dongjing", "name=dragon", "sex=man"]
+    //现在jd =  ["area=dongjing", "name=dragon", "sex=man"]
 
     jd = jd.join('&');    //"area=dongjing&name=dragon&sex=man"
     return iI(jd)
@@ -252,24 +258,26 @@ var iI = function(jc) {
     jc = iD(jc);//iD btoa
     return jc
 };
+```
 (22)通过断点调试拿到了sign值，注意此次拦截是拦截的发验证码的click事件，密码登录事件可能不同，但是解决方案一样；
-
- 
-sign值
-
-
+![sign值](https://upload-images.jianshu.io/upload_images/10203810-34417323d92afb5f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 （23）通过，算法逆推，拿到jc这个参数是这个
+```js
 var iI = function(jc) {
     jc = cD.deflate(JSON.stringify(jc));//cD pako压缩
     jc = iD(jc);//iD btoa
     return jc
 };
+```
+```python
 sign = "eJxTKsosznbOSMzLS82xNTIwUistTi2yNTQ3MzK0tLC0NDJWAgDC8wnz"
 sign = base64.b64decode(sign.encode())
 sign = zlib.decompress(sign)
 print(sign)
 #  打印内容为： b'"riskChannel=202&user=17621989923"'
+```
 （24）此时ip生成算法就可以梳理为,sign得到了解决"eJxTKsosznbOSMzLS82xNTIwUistTi2yNTQ3MzK0tLC0NDJWAgDC8wnz"
+```
 var iI = function(jc) {
     jc = cD.deflate(JSON.stringify(jc));//cD pako压缩
     jc = iD(jc);//iD btoa
@@ -306,7 +314,9 @@ iP.reload = function(jv) {
     };
     return jw
 };
+```
 （25）进一步梳理........
+```
 var iI = function(jc) {
     jc = cD.deflate(JSON.stringify(jc));//cD pako压缩
     jc = iD(jc);//iD btoa
@@ -346,29 +356,31 @@ iP.reload = function(jv) {
     return jw
 };
 
+```
 （26）再次对逆向解码验证 rohrdata得到:
-
- 
-rohrdata =encodeURIComponent(ip)
+![rohrdata =encodeURIComponent(ip) ](https://upload-images.jianshu.io/upload_images/10203810-51f14228a72199d2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```
 {
-    "rId": "100049",
-    "ver": "1.0.6",
-    "ts": 1555554915457,
-    "cts": 1555555821946,
-    "brVD": [290, 375],
-    "brR": [
-        [1366, 768],
-        [1366, 728], 24, 24
-    ],
-    "bI": ["https://account.dianping.com/account/iframeLogin?callback=EasyLogin_frame_callback0&wide=false&protocol=https:&redir=http%3A%2F%2Fwww.dianping.com", "https://account.dianping.com/login?redir=http://www.dianping.com"],
-    "mT": ["220,156", "220,156", "220,157", "219,158", "219,159", "219,161", "219,162", "217,163", "217,165", "215,166", "214,167", "214,169", "213,169", "213,171", "212,172", "211,173", "211,175", "210,177", "210,179", "210,182", "210,184", "210,185", "210,186", "210,188", "210,189", "210,191", "209,193", "208,196", "208,199", "208,200"],
-    "kT": ["3,INPUT", "2,INPUT", "9,INPUT", "9,INPUT", "8,INPUT", "9,INPUT", "1,INPUT", "2,INPUT", "6,INPUT", "7,INPUT", "1,INPUT", "\\b,INPUT", "\\b,INPUT", "\\b,INPUT", "\\b,INPUT", "6,INPUT", "3,INPUT", "1,INPUT"],
-    "aT": ["220,156,BUTTON", "100,163,INPUT", "99,160,INPUT", "181,113,INPUT", "275,20,DIV"],
-    "tT": [],
-    "aM": "",
-    "sign": "eJxTKsosznbOSMzLS82xNTIwUistTi2yNTQ3MzK0tLC0NDJWAgDC8wnz"
+	"rId": "100049",
+	"ver": "1.0.6",
+	"ts": 1555554915457,
+	"cts": 1555555821946,
+	"brVD": [290, 375],
+	"brR": [
+		[1366, 768],
+		[1366, 728], 24, 24
+	],
+	"bI": ["https://account.dianping.com/account/iframeLogin?callback=EasyLogin_frame_callback0&wide=false&protocol=https:&redir=http%3A%2F%2Fwww.dianping.com", "https://account.dianping.com/login?redir=http://www.dianping.com"],
+	"mT": ["220,156", "220,156", "220,157", "219,158", "219,159", "219,161", "219,162", "217,163", "217,165", "215,166", "214,167", "214,169", "213,169", "213,171", "212,172", "211,173", "211,175", "210,177", "210,179", "210,182", "210,184", "210,185", "210,186", "210,188", "210,189", "210,191", "209,193", "208,196", "208,199", "208,200"],
+	"kT": ["3,INPUT", "2,INPUT", "9,INPUT", "9,INPUT", "8,INPUT", "9,INPUT", "1,INPUT", "2,INPUT", "6,INPUT", "7,INPUT", "1,INPUT", "\\b,INPUT", "\\b,INPUT", "\\b,INPUT", "\\b,INPUT", "6,INPUT", "3,INPUT", "1,INPUT"],
+	"aT": ["220,156,BUTTON", "100,163,INPUT", "99,160,INPUT", "181,113,INPUT", "275,20,DIV"],
+	"tT": [],
+	"aM": "",
+	"sign": "eJxTKsosznbOSMzLS82xNTIwUistTi2yNTQ3MzK0tLC0NDJWAgDC8wnz"
 }
+```
 （27）这和我们得到的ip不一样啊
+```
 var iP = {
     rId: '100049',
     ver: '1.0.6',
@@ -384,11 +396,13 @@ var iP = {
     aM:_$_543c[60] //或者直接写死成 '',
     sign: "eJxTKsosznbOSMzLS82xNTIwUistTi2yNTQ3MzK0tLC0NDJWAgDC8wnz"
 };
+```
 （28）
-mT: [],
-kT: [],
-aT: [],
+   mT: [],
+   kT: [],
+   aT: [], 
 这三个本应该是空值，逆向解码得到的却有值，先不管继续往下
+```
 A 成功校验发送出去的post的token 
 eJyNk21vmzAQx7 LpeaVldgGP0WKpq7ZJNqEbi3pXnRVRQjNUAlEwEqbad 9Z9OYbI2mIb/43YP/d cTv1AVrNAYUUKIrxFGT2llzCEZCrCaGo0pN5 vKfe5xCjpfVwxqn2B0bK6maLxLdMEe5LfGccV2LfUEwJLoe7wGzJA5sMxOQGkoB9Ns63Ho1GcJOXPohmusrjYZsV6mJSbvXOUPVTxJp2V66z4kMR5voyTx8mnuH6xrnsbvd8HyKDNVunkIc7rdLCtyqZMynzS1RlU6SqrrHHinZ6wz3Datv2jKoz9z6Zy20YvBHnvJGC8TWTGY4xgys1T/k3SENVAypHek6COmCUJ5DniljiQ1aM kHTUqXiHJDs9BtTpUSDPUacHXUnpSO9JMUe I3dDCUfKkburbV0Cc2hbjSgg4Ui/ESPEPNmjfTIPB GXRWRCjvQRUkd89Mhd4Ugeyfu /H/slbx3StB fLhx/HERRZehySDELK/v1myV9AIKNkAPhpYc3gNPgxuj2RhNoz2HvxKidbYugNLz5 iiLutdsby8nu9m14o9h1HQLrK6iTL2EkZfvfnugjSzMxJOz7 drqdnqi126Pcrj98B0g==
 
@@ -397,25 +411,27 @@ B hordata逆推出来的token   和A的区别是+号换成了空格
 
 C 通过 B 逆向解码得到的json，再编码得到的token，B C本应该相同啊，难道是python代码出错了；
 eJyVk29vmzAQxr9K3jS8QYn/YGxXiqa26STahG4r6V60VUUIzawSiICONtO++84mqYkSTSoC6XePj+d8h/njlMHCOe05GCHkScftOb/T0ggDNPB1XFcQYqYvT2LmMQ5i0lGZIFh6Pqjz8m4M8j2RyO1Rzh6N9kNL95j6kMJ9AeIuIDognn5MaqAznV91va5Oh8M4SYrXvB4sVJyvVb4cJMVqJw7Vcxmv0kmxVPmXJM6yeZy8jC7j6t1IT2b1abeA+o1apKPnOKvS/ros6iIpslFbp1+mC1Wa4ISenZCvcDdNs1dVj+G/u8rMPqwT5B146A5XkemQEORiZqZ7gNwgloDCovxAH1skLXJAapG1yABbX+wBcotbM7qHfOtLALe+GJBa3PrCJjm3KD9QEIueRfua8C0Ki9ZBtntA0JtsCyMB6FuUOyQImYm+tBOlbhB+m0Vm1aI8iuKoio86+Bb50dyHh/mng44pPTTVXcV758Q9n0XRTWiSENIfu9OBPgeo4yLgU+HuODiDYbnj4M4418bZ1Jjq31ynVGqZa06v3qLrqqg2+fzmdrqZ3AryFkZBM1NVHSnyHkbf6XRzjerJBQrHVz/PluML0eQb5+8/4mwQUg==
+```
 (29)这是python代码,我打印了编码后两个json的区别，发现中间少了个空格，这nima........
+```
 import base64, zlib, time
 hordata = {
-    "rId":"100049",
-    "ver":"1.0.6",
-    "ts":1555554915457,
-    "cts":1555555821946,
-    "brVD":[290, 375],
-    "brR":[
-        [1366, 768],
-        [1366, 728], 24, 24
-    ],
-    "bI":["https://account.dianping.com/account/iframeLogin?callback=EasyLogin_frame_callback0&wide=false&protocol=https:&redir=http%3A%2F%2Fwww.dianping.com", "https://account.dianping.com/login?redir=http://www.dianping.com"],
-    "mT":["220,156", "220,156", "220,157", "219,158", "219,159", "219,161", "219,162", "217,163", "217,165", "215,166", "214,167", "214,169", "213,169", "213,171", "212,172", "211,173", "211,175", "210,177", "210,179", "210,182", "210,184", "210,185", "210,186", "210,188", "210,189", "210,191", "209,193", "208,196", "208,199", "208,200"],
-    "kT":["3,INPUT", "2,INPUT", "9,INPUT", "9,INPUT", "8,INPUT", "9,INPUT", "1,INPUT", "2,INPUT", "6,INPUT", "7,INPUT", "1,INPUT", "\\b,INPUT", "\\b,INPUT", "\\b,INPUT", "\\b,INPUT", "6,INPUT", "3,INPUT", "1,INPUT"],
-    "aT":["220,156,BUTTON", "100,163,INPUT", "99,160,INPUT", "181,113,INPUT", "275,20,DIV"],
-    "tT":[],
-    "aM":"",
-    "sign":"eJxTKsosznbOSMzLS82xNTIwUistTi2yNTQ3MzK0tLC0NDJWAgDC8wnz"
+	"rId":"100049",
+	"ver":"1.0.6",
+	"ts":1555554915457,
+	"cts":1555555821946,
+	"brVD":[290, 375],
+	"brR":[
+		[1366, 768],
+		[1366, 728], 24, 24
+	],
+	"bI":["https://account.dianping.com/account/iframeLogin?callback=EasyLogin_frame_callback0&wide=false&protocol=https:&redir=http%3A%2F%2Fwww.dianping.com", "https://account.dianping.com/login?redir=http://www.dianping.com"],
+	"mT":["220,156", "220,156", "220,157", "219,158", "219,159", "219,161", "219,162", "217,163", "217,165", "215,166", "214,167", "214,169", "213,169", "213,171", "212,172", "211,173", "211,175", "210,177", "210,179", "210,182", "210,184", "210,185", "210,186", "210,188", "210,189", "210,191", "209,193", "208,196", "208,199", "208,200"],
+	"kT":["3,INPUT", "2,INPUT", "9,INPUT", "9,INPUT", "8,INPUT", "9,INPUT", "1,INPUT", "2,INPUT", "6,INPUT", "7,INPUT", "1,INPUT", "\\b,INPUT", "\\b,INPUT", "\\b,INPUT", "\\b,INPUT", "6,INPUT", "3,INPUT", "1,INPUT"],
+	"aT":["220,156,BUTTON", "100,163,INPUT", "99,160,INPUT", "181,113,INPUT", "275,20,DIV"],
+	"tT":[],
+	"aM":"",
+	"sign":"eJxTKsosznbOSMzLS82xNTIwUistTi2yNTQ3MzK0tLC0NDJWAgDC8wnz"
 }
 import json
 info = json.dumps(hordata).encode('utf-8')
@@ -427,13 +443,14 @@ _token = "eJyNk21vmzAQx7+LpeaVldgGP0WKpq7ZJNqEbi3pXnRVRQjNUAlEwEqbad+9Z9OYbI2mIb
 _token = base64.b64decode(_token.encode())
 _token = zlib.decompress(_token)
 print(_token)
- 
-键值对之间空格
-
-
+```
+![键值对之间空格](https://upload-images.jianshu.io/upload_images/10203810-e5b752d914539965.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 （30）网上找资料找到了解决方案dumps方法里添加参数separators=(',',':')搞定空格问题（json删除键值对之间的空格）
+```
 info = json.dumps(hordata,separators=(',',':')).encode('utf-8')
+```
 （31）这个编码解码不一致的问题解决了，问题还是要回到第28步，全局搜索mT发现，这三个控制在事件绑定的function里面进行了赋值
+```
  iP.bindUserTrackEvent = function() {
                     var jj = function(jn) {
                         var jo, jm, jl;
@@ -512,7 +529,9 @@ info = json.dumps(hordata,separators=(',',':')).encode('utf-8')
                         })
                     }
                 };
+```
 （32）问题解决，现在用python代码实现模拟加密和post请求
+```
 import zlib
 import base64
 import time
@@ -596,4 +615,6 @@ if __name__ == '__main__':
     gettoken.GetPhonecode()
 
 
+
+```
 
