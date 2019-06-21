@@ -6,7 +6,7 @@
 --
 >后面补充...
 
-![框架设计图](/home/dragon/Documents/companyproject/spider_man_app/sentiment/架构设计图.png)
+![框架设计图](架构设计图.png)
 
 
 ***项目运行的核心组件***
