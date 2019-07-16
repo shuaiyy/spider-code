@@ -4,5 +4,5 @@
 |目录          |说明                                                       |
 |-------------|-----------------------------------------------------------|
 |apptest      |uiautomator2手机自动化框架测试脚本                            |
-|auto_mobile  |手机自动化全控，架构设计，群控手机app 集合appium和uiautomator2   |
+|auto_mobile  |手机自动化群控，架构设计，群控手机app 集合appium和uiautomator2   |
 |dianpinglogin|大众点评手机验证码登录接口破解                                  |
