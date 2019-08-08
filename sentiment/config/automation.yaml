@@ -1,0 +1,255 @@
+sina: # 新浪新闻
+  apk_name: sinaNews_7.3.0_1537974144_19473
+  appPackage: com.sina.news
+  appActivity: com.sina.news.ui.MainActivity
+  steps: # 自动化操作步骤
+    -
+      action: click # 操作方法
+      select_type: id # 元素选择类型
+      selector: com.sina.news:id/amk # 具体元素
+    -
+      action: send_keys
+      select_type: id
+      selector: com.sina.news:id/acq
+    -
+      action: search
+      x: 670
+      y: 1300
+      sleep: 3
+      select_type: id
+      selector: com.sina.news:id/acq
+    -
+      action: swipe
+      direction: up
+      sleep: 2
+      times: 5
+    -
+      action: clear
+      select_type: id
+      selector: com.sina.news:id/acq
+
+douyin: # 抖音短视频
+  apk_name: app_aweGW_v4.0.0_ae2d3a4
+  appPackage: com.ss.android.ugc.aweme
+  appActivity: .splash.SplashActivity
+  steps:
+
+tencent: # 腾讯新闻
+  apk_name: TencentNews_63_v5680
+  appPackage: com.tencent.news
+  appActivity: com.tencent.news.activity.SplashActivity
+  steps:
+    -
+      action: click
+      select_type: id
+      selector: com.tencent.news:id/agn
+    -
+      action: send_keys
+      select_type: id
+      selector: com.tencent.news:id/bpc
+    -
+      action: search
+      x: 670
+      y: 1300
+      sleep: 3
+      select_type: id
+      selector: com.tencent.news:id/bpc
+    -
+      action: swipe
+      direction: up
+      sleep: 2
+      times: 5
+    -
+      action: clear
+      select_type: id
+      selector: com.tencent.news:id/bpc
+
+sohu: # 搜狐新闻
+  apk_name: SohuNews_V6.1.3_0830110030_online_S_1001
+  appPackage: com.sohu.newsclient
+  appActivity: com.sohu.newsclient.boot.activity.SplashActivity
+  steps:
+    -
+      action: click
+      select_type: id
+      selector: com.sohu.newsclient:id/search_text
+    -
+      action: send_keys
+      select_type: id
+      selector: com.sohu.newsclient:id/ed_keywords
+    -
+      action: search
+      x: 670
+      y: 1300
+      sleep: 3
+      select_type: id
+      selector: com.sohu.newsclient:id/ed_keywords
+    -
+      action: swipe
+      direction: up
+      sleep: 2
+      times: 5
+    -
+      action: clear
+      select_type: id
+      selector: com.sohu.newsclient:id/ed_keywords
+
+
+
+yidianzixun: # 一点资讯
+  apk_name: yidian
+  appPackage: com.hipu.yidian
+  appActivity: com.yidianmini.news.ui.MiniHostActivity
+  steps:
+    -
+      action: click
+      select_type: id
+      selector: com.hipu.yidian:id/txtSearch
+    -
+      action: send_keys
+      select_type: xpath
+      selector: /hierarchy/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[3]/android.view.View[3]/android.widget.EditText
+    -
+      action: click
+      select_type: xpath
+      selector: /hierarchy/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[3]/android.view.View[2]
+    -
+      action: swipe
+      direction: up
+      sleep: 2
+      times: 5
+    -
+      action: click
+      select_type: id
+      selector: com.hipu.yidian:id/action_bar_back
+    -
+      action: clear
+      select_type: xpath
+      selector: /hierarchy/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[3]/android.view.View[3]/android.widget.EditText
+
+kuaibao: # 天天快报
+  apk_name: kuaibao_63
+  appPackage: com.tencent.reading
+  appActivity: com.tencent.reading.activity.SplashActivity
+  steps:
+    -
+      action: click
+      select_type: id
+      selector: com.tencent.reading:id/hot_topic_list
+    -
+      action: send_keys
+      select_type: id
+      selector: com.tencent.reading:id/inputSearch
+    -
+      action: click
+      select_type: id
+      selector: com.tencent.reading:id/btnCancel
+    -
+      action: swipe
+      direction: up
+      sleep: 2
+      times: 5
+    -
+      action: clear
+      select_type: id
+      selector: com.tencent.reading:id/inputSearch
+
+renmin: # 人民日报
+  apk_name: 人民日报_6.3.5_1021.apk
+  appPackage: com.peopledailychina.activity
+  appActivity: .activity.WelcomeActivity
+  steps:
+    -
+      action: click
+      select_type: id
+      selector: com.peopledailychina.activity:id/image_left
+    -
+      action: send_keys
+      select_type: id
+      selector: com.peopledailychina.activity:id/et_search
+    -
+      action: search
+      x: 670
+      y: 1300
+      sleep: 3
+      select_type: id
+      selector: com.peopledailychina.activity:id/et_search
+    -
+      action: swipe
+      direction: up
+      sleep: 2
+      times: 5
+    -
+      action: clear
+      select_type: id
+      selector: com.peopledailychina.activity:id/et_search
+
+xinhua: # 新华社
+  apk_name: 新华社_6.0.6_606.apk
+  appPackage: net.xinhuamm.mainclient
+  appActivity: .mvp.ui.splash.SplashActivity
+  step:
+    -
+      action: click
+      select_type: id
+      selector: net.xinhuamm.mainclient:id/tv_default_search_hint
+    -
+      action: send_keys
+      select_type: id
+      selector: net.xinhuamm.mainclient:id/etSearch
+    -
+      action: search
+      x: 670
+      y: 1300
+      sleep: 3
+      select_type: id
+      selector: net.xinhuamm.mainclient:id/etSearch
+    -
+      action: swipe
+      direction: up
+      sleep: 2
+      times: 5
+    -
+      action: clear
+      select_type: id
+      selector: net.xinhuamm.mainclient:id/etSearch
+
+zaker:
+  apk_name:
+  appPackage: com.myzaker.ZAKER_Phone
+  appActivity: .view.LogoActivity
+  steps:
+    -
+      action: click
+      select_type: id
+      selector: com.myzaker.ZAKER_Phone:id/action_subscribe
+    -
+      action: send_keys
+      select_type: id
+      selector: com.myzaker.ZAKER_Phone:id/search_field
+    -
+      action: search
+      x: 670
+      y: 1300
+      sleep: 3
+      select_type: id
+      selector: com.myzaker.ZAKER_Phone:id/search_field
+    -
+      action: swipe
+      direction: up
+      sleep: 2
+      times: 5
+    -
+      action: clear
+      select_type: id
+      selector: com.myzaker.ZAKER_Phone:id/search_field
+
+
+
+wangyi: # 网易新闻
+  apk_name:
+  appPackage:
+  appActivity:
+
+
+sleep: 5

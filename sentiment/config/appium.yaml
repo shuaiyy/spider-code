@@ -1,0 +1,12 @@
+servers_number: 10
+host: 127.0.0.1 # appium 地址
+port: 6000      # appium 端口
+bootstrap_port: 6001 # appium端口
+
+redis: # 本地redis服务
+  host: 127.0.0.1
+  port: 6370
+
+rabbit: # 本地rabbit服务
+  host: 127.0.0.1
+  port: 5672
